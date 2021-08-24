@@ -14,13 +14,17 @@ class ReadingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reading)
 
-        var fileName = intent.getStringExtra("fileName")
+        val fileName = intent.getStringExtra("fileName")
         var fileContent = intent.getStringExtra("fileContent")
-        textViewContent.text = fileContent
+        val section = intent.getStringExtra("section")?.toInt()
+        val sectionList = intent.getStringArrayListExtra("sectionList")
+
+        val sectionContent = section?.minus(1)?.let { sectionList?.get(it) }
+        textViewContent.text = sectionContent
         textViewTitle.text = fileName
 
         buttonClose.setOnClickListener {
-            var intentGoHome = Intent(it.context, MainActivity::class.java)
+            val intentGoHome = Intent(it.context, MainActivity::class.java)
             startActivity(intentGoHome)
         }
 

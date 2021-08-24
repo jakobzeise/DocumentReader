@@ -3,16 +3,12 @@ package com.jakobzeise.documentreader.view
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakobzeise.documentreader.R
 import com.jakobzeise.documentreader.modell.Projects
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
 
 
 private const val LOGGING_TAG = "LoggingTag"
@@ -22,6 +18,7 @@ var uri: Uri? = null
 var fileName: String = ""
 var fileReader = FileReader()
 var fileContent = ""
+var sectionList = mutableListOf<String>()
 
 
 class MainActivity : AppCompatActivity() {
@@ -57,16 +54,17 @@ class MainActivity : AppCompatActivity() {
             //The fileContent
             fileContent = uri?.let { fileReader.readTextFromUri(it, contentResolver) }.toString()
 
-            var sectionList = mutableListOf<>()
-            Log.d(LOGGING_TAG, "fileContent : $fileContent")
-            Log.d(LOGGING_TAG, "fileName : $fileName")
-            Log.d(LOGGING_TAG, "uri : $uri")
 
+//            Log.d(LOGGING_TAG, "fileContent : $fileContent")
+//            Log.d(LOGGING_TAG, "fileName : $fileName")
+//            Log.d(LOGGING_TAG, "uri : $uri")
 
-            listOfProjects.add(Projects(fileName, uri, fileContent, mutableListOf()))
+            sectionList = fileReader.getSectionsFromString(fileContent)
+
+            listOfProjects.add(Projects(fileName, uri, fileContent, sectionList))
 
             recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = RecyclerAdapter(listOfProjects)
+            recyclerView.adapter = RecyclerAdapterMainActivity(listOfProjects)
         }
     }
 

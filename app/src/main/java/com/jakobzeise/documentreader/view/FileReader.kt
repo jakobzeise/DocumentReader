@@ -10,6 +10,8 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
+private const val LOGGING_TAG = "LoggingTag"
+
 class FileReader : Application() {
 
     fun getFileName(uri: Uri, contentResolver: ContentResolver): String? {
@@ -47,9 +49,32 @@ class FileReader : Application() {
         return stringBuilder.toString()
     }
 
-    fun getSectionsFromString(string: String): MutableList<String>{
-        var numberOfSections = string.length % 1000
-        var firstSection = string.slice(0..1000)
-        return mutableListOf(firstSection)
+
+    fun getSectionsFromString(string: String): MutableList<String> {
+        //Divide words into wordList
+        var wordList = string.split(" ")
+
+        //Get the number of sections needed
+        var numberOfSections = wordList.size / 1000 + 1
+
+        //create a list of sections
+        var sectionList = mutableListOf<String>()
+
+        //create Sections in Sectionlist
+        var i = numberOfSections
+        while (i-- > 0){
+            sectionList.add("")
+        }
+
+        //Add words into index
+        for ((index, words) in wordList.withIndex()){
+            sectionList[index / 1000] = sectionList[index / 1000] +" $words "
+        }
+
+//        Log.d(LOGGING_TAG, "sectionListSize : ${sectionList.size}")
+//        Log.d(LOGGING_TAG, "number of sections: $numberOfSections ")
+//        Log.d(LOGGING_TAG, "sectionList :  $sectionList ")
+        return sectionList
+
     }
 }

@@ -4,15 +4,14 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.jakobzeise.documentreader.R
 import com.jakobzeise.documentreader.modell.Projects
 import kotlinx.android.synthetic.main.item_recycler.view.*
 
 
-class RecyclerAdapter(private var listOfProjects: MutableList<Projects>) :
-    RecyclerView.Adapter<RecyclerAdapter.ProjectViewHolder>() {
+class RecyclerAdapterMainActivity(private var listOfProjects: MutableList<Projects>) :
+    RecyclerView.Adapter<RecyclerAdapterMainActivity.ProjectViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
         val view =
@@ -28,19 +27,21 @@ class RecyclerAdapter(private var listOfProjects: MutableList<Projects>) :
         holder.itemView.textViewProjectNameItemRecycler.text = itemProject.fileName
 
         holder.itemView.itemRecyclerLayout.setOnClickListener {
-            val intentOpenReadingActivity = Intent(holder.itemView.context, ReadingActivity::class.java)
-            intentOpenReadingActivity.putExtra("fileName", fileName)
-            intentOpenReadingActivity.putExtra("uri", uri.toString())
-            intentOpenReadingActivity.putExtra("fileContent", fileContent)
-            holder.itemView.context.startActivity(intentOpenReadingActivity)
+            val intentOpenSectionActivity = Intent(holder.itemView.context, SectionActivity::class.java)
+            intentOpenSectionActivity.putExtra("fileName", fileName)
+            intentOpenSectionActivity.putExtra("uri", uri.toString())
+            intentOpenSectionActivity.putExtra("fileContent", fileContent)
+            intentOpenSectionActivity.putStringArrayListExtra("sectionList", ArrayList(sectionList))
+            holder.itemView.context.startActivity(intentOpenSectionActivity)
         }
 
         holder.itemView.textViewProjectNameItemRecycler.setOnClickListener {
-            val intentOpenReadingActivity = Intent(holder.itemView.context, ReadingActivity::class.java)
-            intentOpenReadingActivity.putExtra("fileName", fileName)
-            intentOpenReadingActivity.putExtra("uri", uri.toString())
-            intentOpenReadingActivity.putExtra("fileContent", fileContent)
-            holder.itemView.context.startActivity(intentOpenReadingActivity)
+            val intentOpenSectionActivity = Intent(holder.itemView.context, SectionActivity::class.java)
+            intentOpenSectionActivity.putExtra("fileName", fileName)
+            intentOpenSectionActivity.putExtra("uri", uri.toString())
+            intentOpenSectionActivity.putExtra("fileContent", fileContent)
+            intentOpenSectionActivity.putStringArrayListExtra("sectionList", ArrayList(sectionList))
+            holder.itemView.context.startActivity(intentOpenSectionActivity)
         }
 
     }
