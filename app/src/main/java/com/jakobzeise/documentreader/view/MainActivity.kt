@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakobzeise.documentreader.R
 import com.jakobzeise.documentreader.modell.Projects
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,76 +17,65 @@ import java.io.InputStreamReader
 
 private const val LOGGING_TAG = "LoggingTag"
 
+var listOfProjects = mutableListOf<Projects>()
+var uri: Uri? = null
+var fileName: String = ""
+var fileReader = FileReader()
+var fileContent = ""
+
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var projectList = mutableListOf<Projects>()
-
 
         buttonAddProject.setOnClickListener {
+
+            //intent for opening the fileChooser
             val intent = Intent()
                 .setType("*/*")
                 .setAction(Intent.ACTION_GET_CONTENT)
 
             startActivityForResult(Intent.createChooser(intent, "Select a file"), 111)
         }
-
-
     }
 
+    //This is happening when you click on a file
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        //Checks if it is the right input
         if (requestCode == 111 && resultCode == RESULT_OK) {
-            val uri = data?.data
-            textViewProjectList.text = uri?.let { readTextFromUri(it) }
-            getFileName(uri)?.let { Log.d(LOGGING_TAG, it) }
+
+            //The Uri of the file
+            uri = data?.data
+
+            //The fileName
+            fileName = uri?.let { fileReader.getFileName(it, contentResolver).toString() }.toString()
+
+            //The fileContent
+            fileContent = uri?.let { fileReader.readTextFromUri(it, contentResolver) }.toString()
+
+            var sectionList = mutableListOf<>()
+            Log.d(LOGGING_TAG, "fileContent : $fileContent")
+            Log.d(LOGGING_TAG, "fileName : $fileName")
+            Log.d(LOGGING_TAG, "uri : $uri")
+
+
+            listOfProjects.add(Projects(fileName, uri, fileContent, mutableListOf()))
+
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = RecyclerAdapter(listOfProjects)
         }
     }
 
-
-    @Throws(IOException::class)
-    private fun readTextFromUri(uri: Uri): String {
-        val stringBuilder = StringBuilder()
-        contentResolver.openInputStream(uri)?.use { inputStream ->
-            BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                var line: String? = reader.readLine()
-                while (line != null) {
-                    stringBuilder.append(line)
-                    line = reader.readLine()
-                }
-            }
-        }
-        return stringBuilder.toString()
+    fun getUri(): Uri? {
+        return uri
     }
 
-
-    fun getFileName(uri: Uri?): String? {
-        var result: String? = null
-        if (uri != null) {
-            if (uri.scheme == "content") {
-                val cursor = uri?.let { contentResolver.query(it, null, null, null, null) }
-                try {
-                    if (cursor != null && cursor.moveToFirst()) {
-                        result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                    }
-                } finally {
-                    cursor!!.close()
-                }
-            }
-        }
-        if (result == null) {
-            if (uri != null) {
-                result = uri.path
-            }
-            val cut = result!!.lastIndexOf('/')
-            if (cut != -1) {
-                result = result.substring(cut + 1)
-            }
-        }
-        return result
+    fun getFileName(): String? {
+        return fileName
     }
 
 }
