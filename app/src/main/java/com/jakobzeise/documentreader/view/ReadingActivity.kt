@@ -1,13 +1,10 @@
 package com.jakobzeise.documentreader.view
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.net.toUri
+import androidx.appcompat.app.AppCompatActivity
 import com.jakobzeise.documentreader.R
 import kotlinx.android.synthetic.main.activity_reading.*
-import kotlinx.android.synthetic.main.item_recycler.*
-import java.io.File
 
 class ReadingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

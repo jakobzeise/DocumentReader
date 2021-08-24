@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">DocumentReader</string>
+    <string name="content">Content</string>
+    <string name="close">Close</string>
+    <string name="mark_as_read">Mark as Read</string>
+    <string name="project_name">Project Name</string>
+    <string name="project_list">Project List</string>
+    <string name="add_project">Add Project</string>
+    <string name="_0">0</string>
 </resources>

@@ -11,15 +11,12 @@ import kotlinx.android.synthetic.main.item_recycler_sections.view.*
 class RecyclerAdapterSectionActivity(private var listOfSections: MutableList<Int>) :
     RecyclerView.Adapter<RecyclerAdapterSectionActivity.SectionViewHolder>() {
 
-
-
-
     class SectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_recycler_sections, parent, false)
-        return RecyclerAdapterSectionActivity.SectionViewHolder(view)
+        return SectionViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: SectionViewHolder, position: Int) {

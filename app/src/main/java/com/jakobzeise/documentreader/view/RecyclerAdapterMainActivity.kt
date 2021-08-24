@@ -27,7 +27,8 @@ class RecyclerAdapterMainActivity(private var listOfProjects: MutableList<Projec
         holder.itemView.textViewProjectNameItemRecycler.text = itemProject.fileName
 
         holder.itemView.itemRecyclerLayout.setOnClickListener {
-            val intentOpenSectionActivity = Intent(holder.itemView.context, SectionActivity::class.java)
+            val intentOpenSectionActivity =
+                Intent(holder.itemView.context, SectionActivity::class.java)
             intentOpenSectionActivity.putExtra("fileName", fileName)
             intentOpenSectionActivity.putExtra("uri", uri.toString())
             intentOpenSectionActivity.putExtra("fileContent", fileContent)
@@ -36,21 +37,19 @@ class RecyclerAdapterMainActivity(private var listOfProjects: MutableList<Projec
         }
 
         holder.itemView.textViewProjectNameItemRecycler.setOnClickListener {
-            val intentOpenSectionActivity = Intent(holder.itemView.context, SectionActivity::class.java)
+            val intentOpenSectionActivity =
+                Intent(holder.itemView.context, SectionActivity::class.java)
             intentOpenSectionActivity.putExtra("fileName", fileName)
             intentOpenSectionActivity.putExtra("uri", uri.toString())
             intentOpenSectionActivity.putExtra("fileContent", fileContent)
             intentOpenSectionActivity.putStringArrayListExtra("sectionList", ArrayList(sectionList))
             holder.itemView.context.startActivity(intentOpenSectionActivity)
         }
-
     }
 
     override fun getItemCount(): Int {
         return listOfProjects.size
     }
-
-
 
     class ProjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 }

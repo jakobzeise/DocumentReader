@@ -1,13 +1,11 @@
 package com.jakobzeise.documentreader.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.GridLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakobzeise.documentreader.R
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_section.*
 
 
@@ -18,19 +16,17 @@ class SectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_section)
 
-
-        var sectionList = intent.getStringArrayListExtra("sectionList")
-        var fileName = intent.getStringExtra("fileName")
+        val sectionList = intent.getStringArrayListExtra("sectionList")
+        val fileName = intent.getStringExtra("fileName")
 
         if (sectionList != null) {
             Log.d(LOGGING_TAG, "sectionList : $sectionList")
         }
-        var numberList = mutableListOf<Int>()
-
+        val numberList = mutableListOf<Int>()
 
         var i = 1
         if (sectionList != null) {
-            for(section in sectionList){
+            for (section in sectionList) {
                 numberList.add(i++)
             }
         }

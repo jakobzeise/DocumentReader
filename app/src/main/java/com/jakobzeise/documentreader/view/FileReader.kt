@@ -5,7 +5,6 @@ import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
-import android.util.Log
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -18,9 +17,9 @@ class FileReader : Application() {
         var result: String? = null
         if (uri.scheme == "content") {
             val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
-            cursor.use { cursor ->
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            cursor.use {
+                if (it != null && it.moveToFirst()) {
+                    result = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                 }
             }
         }
@@ -51,29 +50,27 @@ class FileReader : Application() {
 
 
     fun getSectionsFromString(string: String): MutableList<String> {
+
         //Divide words into wordList
-        var wordList = string.split(" ")
+        val wordList = string.split(" ")
 
         //Get the number of sections needed
-        var numberOfSections = wordList.size / 1000 + 1
+        val numberOfSections = wordList.size / 1000 + 1
 
         //create a list of sections
-        var sectionList = mutableListOf<String>()
+        val sectionList = mutableListOf<String>()
 
-        //create Sections in Sectionlist
+        //create Sections in sectionlist
         var i = numberOfSections
-        while (i-- > 0){
+        while (i-- > 0) {
             sectionList.add("")
         }
 
         //Add words into index
-        for ((index, words) in wordList.withIndex()){
-            sectionList[index / 1000] = sectionList[index / 1000] +" $words "
+        for ((index, words) in wordList.withIndex()) {
+            sectionList[index / 1000] = sectionList[index / 1000] + " $words "
         }
 
-//        Log.d(LOGGING_TAG, "sectionListSize : ${sectionList.size}")
-//        Log.d(LOGGING_TAG, "number of sections: $numberOfSections ")
-//        Log.d(LOGGING_TAG, "sectionList :  $sectionList ")
         return sectionList
 
     }

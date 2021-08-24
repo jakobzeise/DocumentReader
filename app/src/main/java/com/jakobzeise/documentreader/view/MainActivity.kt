@@ -3,15 +3,11 @@ package com.jakobzeise.documentreader.view
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakobzeise.documentreader.R
 import com.jakobzeise.documentreader.modell.Projects
 import kotlinx.android.synthetic.main.activity_main.*
-
-
-private const val LOGGING_TAG = "LoggingTag"
 
 var listOfProjects = mutableListOf<Projects>()
 var uri: Uri? = null
@@ -49,15 +45,13 @@ class MainActivity : AppCompatActivity() {
             uri = data?.data
 
             //The fileName
-            fileName = uri?.let { fileReader.getFileName(it, contentResolver).toString() }.toString()
+            fileName =
+                uri?.let { fileReader.getFileName(it, contentResolver).toString() }.toString()
 
             //The fileContent
             fileContent = uri?.let { fileReader.readTextFromUri(it, contentResolver) }.toString()
 
 
-//            Log.d(LOGGING_TAG, "fileContent : $fileContent")
-//            Log.d(LOGGING_TAG, "fileName : $fileName")
-//            Log.d(LOGGING_TAG, "uri : $uri")
 
             sectionList = fileReader.getSectionsFromString(fileContent)
 
@@ -66,14 +60,6 @@ class MainActivity : AppCompatActivity() {
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.adapter = RecyclerAdapterMainActivity(listOfProjects)
         }
-    }
-
-    fun getUri(): Uri? {
-        return uri
-    }
-
-    fun getFileName(): String? {
-        return fileName
     }
 
 }
