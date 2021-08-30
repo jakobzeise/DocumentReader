@@ -8,30 +8,48 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jakobzeise.documentreader.R
 import kotlinx.android.synthetic.main.activity_section.*
 
-
-private const val LOGGING_TAG = "LoggingTag"
+var projectNumber = -1
+var fileName = ""
+var fileContent = ""
+var readList = mutableListOf<Boolean>()
+val falseList = mutableListOf<Boolean>()
 
 class SectionActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_section)
 
-        val sectionList = intent.getStringArrayListExtra("sectionList")
-        val fileName = intent.getStringExtra("fileName")
+        var str1 = intent.getStringExtra("projectNumberKey")
+        var str2 = intent.getStringExtra("fileNameKey")
+        var str3 = intent.getStringExtra("fileContentKey")
 
-        if (sectionList != null) {
-            Log.d(LOGGING_TAG, "sectionList : $sectionList")
+
+        projectNumber = intent.getIntExtra(str1, -1)
+
+        fileName = intent.getStringExtra(str2).toString()
+
+        fileContent = intent.getStringExtra(str3).toString()
+        val sectionList = fileContent.let { fileReader.getSectionsFromString(it) }
+
+        readList = if (intent.getBooleanArrayExtra("readList") == null) {
+            for ((_) in sectionList.withIndex()) {
+                falseList.add(false)
+            }
+            falseList
+        } else {
+            intent.getBooleanArrayExtra("readList")!!.toMutableList()
         }
+        Log.d(TAG, "falseList :$falseList")
+        Log.d(TAG, "readList : $readList")
+
         val numberList = mutableListOf<Int>()
 
         var i = 1
-        if (sectionList != null) {
-            for (section in sectionList) {
-                numberList.add(i++)
-            }
+        for (section in sectionList) {
+            numberList.add(i++)
         }
 
-        Log.d(LOGGING_TAG, "numberList : $numberList")
         textViewProjectName.text = fileName
 
         GridLayoutManager(
