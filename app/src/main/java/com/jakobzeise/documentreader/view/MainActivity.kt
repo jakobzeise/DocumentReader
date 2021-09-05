@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -14,7 +13,7 @@ import com.jakobzeise.documentreader.R
 import com.jakobzeise.documentreader.modell.Projects
 import kotlinx.android.synthetic.main.activity_main.*
 
-var listOfProjects = mutableListOf<Projects>()
+var listOfProjects: MutableList<Projects> = mutableListOf()
 var uri: Uri? = null
 var fileReader = FileReader()
 var fileNames = mutableListOf<String>()
@@ -24,6 +23,23 @@ const val BOOKS = "testKey"
 
 class MainActivity : AppCompatActivity() {
     private var sharedPreferences: SharedPreferences? = null
+    private val dldListener: RecyclerAdapterMainActivity.DeleteInterface =
+        object : RecyclerAdapterMainActivity.DeleteInterface {
+            override fun deleteItem(position: Int) {
+//                val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
+                listOfProjects.removeAt(position)
+                fileNames.removeAt(position)
+                fileContents.removeAt(position)
+                readList.removeAt(position)
+
+//                val json = Gson().toJson(listOfProjects)
+//                if (editor != null) {
+//                    editor.putString("jsonKey", json)
+//                    editor.apply()
+//                }
+            }
+
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,17 +52,17 @@ class MainActivity : AppCompatActivity() {
             listOfProjects = Gson().fromJson<MutableList<Projects>>(listOfProjectsString)
 
             recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = RecyclerAdapterMainActivity(listOfProjects)
+            recyclerView.adapter = RecyclerAdapterMainActivity(listOfProjects, dldListener)
         }
 
         if (listOfProjects.isNotEmpty()) {
             recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = RecyclerAdapterMainActivity(listOfProjects)
+            recyclerView.adapter = RecyclerAdapterMainActivity(listOfProjects, dldListener)
         }
 
         buttonAddProject.setOnClickListener {
             recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = RecyclerAdapterMainActivity(listOfProjects)
+            recyclerView.adapter = RecyclerAdapterMainActivity(listOfProjects, dldListener)
             //intent for opening the fileChooser
             val intent = Intent()
                 .setType("*/*")
@@ -93,17 +109,25 @@ class MainActivity : AppCompatActivity() {
                     uri?.let { fileReader.readTextFromUri(it, contentResolver) }.toString()
                 fileContents.add(fileContent)
                 listOfProjects.add(
-                    Projects(
-                        fileNames.elementAt(listOfProjects.size),
-                        fileContents.elementAt(listOfProjects.size)
-                    )
+                    Projects(fileName, fileContent)
                 )
+
             } else {
-                Toast.makeText(this, "This file is already added", Toast.LENGTH_SHORT).show()
+                fileNames.remove(fileName)
+
+                fileNames.add(fileName)
+
+                val fileContent =
+                    uri?.let { fileReader.readTextFromUri(it, contentResolver) }.toString()
+                fileContents.add(fileContent)
+                listOfProjects.add(
+                    Projects(fileName, fileContent)
+                )
             }
 
+
             recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = RecyclerAdapterMainActivity(listOfProjects)
+            recyclerView.adapter = RecyclerAdapterMainActivity(listOfProjects, dldListener)
         }
     }
 

@@ -33,8 +33,6 @@ class RecyclerAdapterSectionActivity(private var listOfSections: MutableList<Int
                 Intent(holder.itemView.context, ReadingActivity::class.java)
             Log.d(TAG, "RecyclerAdapterSectionActivity: sectionNumber: $position")
             intentOpenReadingActivity.putExtra("sectionNumber", position)
-            intentOpenReadingActivity.putExtra("fileName", fileName)
-            intentOpenReadingActivity.putExtra("fileContent", fileContent)
             intentOpenReadingActivity.putExtra("projectNumber", projectNumber)
             intentOpenReadingActivity.putExtra("readList", readList.toBooleanArray())
             holder.itemView.context.startActivity(intentOpenReadingActivity)
@@ -45,8 +43,7 @@ class RecyclerAdapterSectionActivity(private var listOfSections: MutableList<Int
                 Intent(holder.itemView.context, ReadingActivity::class.java)
             Log.d(TAG, "RecyclerAdapterSectionActivity: sectionNumber: $position")
             intentOpenReadingActivity.putExtra("sectionNumber", position)
-            intentOpenReadingActivity.putExtra("fileName", fileName)
-            intentOpenReadingActivity.putExtra("fileContent", fileContent)
+            intentOpenReadingActivity.putExtra("projectNumber", projectNumber)
             intentOpenReadingActivity.putExtra("readList", readList.toBooleanArray())
             holder.itemView.context.startActivity(intentOpenReadingActivity)
         }

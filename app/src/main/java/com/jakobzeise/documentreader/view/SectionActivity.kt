@@ -1,5 +1,6 @@
 package com.jakobzeise.documentreader.view
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -15,21 +16,16 @@ var readList = mutableListOf<Boolean>()
 val falseList = mutableListOf<Boolean>()
 
 class SectionActivity : AppCompatActivity() {
+    private var sharedPreferences: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_section)
 
-        var str1 = intent.getStringExtra("projectNumberKey")
-        var str2 = intent.getStringExtra("fileNameKey")
-        var str3 = intent.getStringExtra("fileContentKey")
+        projectNumber = intent.getIntExtra("projectNumber", -1)
+        fileName = listOfProjects[projectNumber].fileName
+        fileContent = listOfProjects[projectNumber].fileContent
 
-
-        projectNumber = intent.getIntExtra(str1, -1)
-
-        fileName = intent.getStringExtra(str2).toString()
-
-        fileContent = intent.getStringExtra(str3).toString()
         val sectionList = fileContent.let { fileReader.getSectionsFromString(it) }
 
         readList = if (intent.getBooleanArrayExtra("readList") == null) {

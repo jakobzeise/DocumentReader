@@ -9,8 +9,6 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
-private const val LOGGING_TAG = "LoggingTag"
-
 class FileReader : Application() {
 
     fun getFileName(uri: Uri, contentResolver: ContentResolver): String? {
@@ -47,7 +45,6 @@ class FileReader : Application() {
         }
         return stringBuilder.toString()
     }
-
 
     fun getSectionsFromString(string: String): MutableList<String> {
 
