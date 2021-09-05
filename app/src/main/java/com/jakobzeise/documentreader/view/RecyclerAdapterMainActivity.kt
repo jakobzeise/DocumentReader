@@ -13,7 +13,7 @@ import com.jakobzeise.documentreader.modell.Projects
 import kotlinx.android.synthetic.main.item_recycler.view.*
 
 
-class RecyclerAdapterMainActivity(private var listOfProjects: MutableSet<Projects>) :
+class RecyclerAdapterMainActivity(private var listOfProjects: MutableList<Projects>) :
     RecyclerView.Adapter<RecyclerAdapterMainActivity.ProjectViewHolder>() {
 
     private var listener: BookReader? = null
@@ -42,6 +42,7 @@ class RecyclerAdapterMainActivity(private var listOfProjects: MutableSet<Project
             intentOpenSectionActivity.putExtra("fileNameKey", "fileName$position")
             intentOpenSectionActivity.putExtra("fileContentKey", "fileContent$position")
             intentOpenSectionActivity.putExtra("projectNumber$position", position)
+            // TODO: 04.09.2021 fix codition for app
             intentOpenSectionActivity.putExtra("fileName$position", fileNames.elementAt(position))
             intentOpenSectionActivity.putExtra(
                 "fileContent$position", fileContents.elementAt(position)
