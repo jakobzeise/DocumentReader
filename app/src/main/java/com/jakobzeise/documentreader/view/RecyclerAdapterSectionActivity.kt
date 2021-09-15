@@ -1,6 +1,8 @@
 package com.jakobzeise.documentreader.view
 
 import android.content.Intent
+import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,30 +17,34 @@ class RecyclerAdapterSectionActivity(private var listOfSections: MutableList<Int
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_recycler_sections, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_recycler_sections, parent, false)
         return SectionViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: SectionViewHolder, position: Int) {
         holder.itemView.textViewSectionNumber.text = listOfSections[position].toString()
+        if (readList[position]) {
+            holder.itemView.constraintLayoutSection.setBackgroundColor(Color.GRAY)
+        }
 
         holder.itemView.setOnClickListener {
-            val intentOpenReadingActivity = Intent(holder.itemView.context, ReadingActivity::class.java)
-            intentOpenReadingActivity.putExtra("fileName", fileName)
-            intentOpenReadingActivity.putExtra("uri", uri.toString())
-            intentOpenReadingActivity.putExtra("fileContent", fileContent)
-            intentOpenReadingActivity.putExtra("section", holder.itemView.textViewSectionNumber.text)
-            intentOpenReadingActivity.putStringArrayListExtra("sectionList", ArrayList(sectionList))
+            val intentOpenReadingActivity =
+                Intent(holder.itemView.context, ReadingActivity::class.java)
+            Log.d(TAG, "RecyclerAdapterSectionActivity: sectionNumber: $position")
+            intentOpenReadingActivity.putExtra("sectionNumber", position)
+            intentOpenReadingActivity.putExtra("projectNumber", projectNumber)
+            intentOpenReadingActivity.putExtra("readList", readList.toBooleanArray())
             holder.itemView.context.startActivity(intentOpenReadingActivity)
         }
 
         holder.itemView.textViewSectionNumber.setOnClickListener {
-            val intentOpenReadingActivity = Intent(holder.itemView.context, ReadingActivity::class.java)
-            intentOpenReadingActivity.putExtra("fileName", fileName)
-            intentOpenReadingActivity.putExtra("uri", uri.toString())
-            intentOpenReadingActivity.putExtra("fileContent", fileContent)
-            intentOpenReadingActivity.putExtra("section", holder.itemView.textViewSectionNumber.text)
-            intentOpenReadingActivity.putStringArrayListExtra("sectionList", ArrayList(sectionList))
+            val intentOpenReadingActivity =
+                Intent(holder.itemView.context, ReadingActivity::class.java)
+            Log.d(TAG, "RecyclerAdapterSectionActivity: sectionNumber: $position")
+            intentOpenReadingActivity.putExtra("sectionNumber", position)
+            intentOpenReadingActivity.putExtra("projectNumber", projectNumber)
+            intentOpenReadingActivity.putExtra("readList", readList.toBooleanArray())
             holder.itemView.context.startActivity(intentOpenReadingActivity)
         }
     }

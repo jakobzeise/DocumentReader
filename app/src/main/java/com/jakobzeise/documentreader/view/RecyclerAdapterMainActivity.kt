@@ -9,9 +9,12 @@ import com.jakobzeise.documentreader.R
 import com.jakobzeise.documentreader.modell.Projects
 import kotlinx.android.synthetic.main.item_recycler.view.*
 
-
-class RecyclerAdapterMainActivity(private var listOfProjects: MutableList<Projects>) :
+class RecyclerAdapterMainActivity(
+    private var listOfProjects: MutableList<Projects>,
+    private var deleteListener: DeleteInterface
+) :
     RecyclerView.Adapter<RecyclerAdapterMainActivity.ProjectViewHolder>() {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
         val view =
@@ -21,7 +24,7 @@ class RecyclerAdapterMainActivity(private var listOfProjects: MutableList<Projec
 
     override fun onBindViewHolder(holder: ProjectViewHolder, position: Int) {
         //Gets the current item
-        val itemProject = listOfProjects[position]
+        val itemProject = listOfProjects.elementAt(position)
 
         //Sets the ProjectName
         holder.itemView.textViewProjectNameItemRecycler.text = itemProject.fileName
@@ -29,21 +32,24 @@ class RecyclerAdapterMainActivity(private var listOfProjects: MutableList<Projec
         holder.itemView.itemRecyclerLayout.setOnClickListener {
             val intentOpenSectionActivity =
                 Intent(holder.itemView.context, SectionActivity::class.java)
-            intentOpenSectionActivity.putExtra("fileName", fileName)
-            intentOpenSectionActivity.putExtra("uri", uri.toString())
-            intentOpenSectionActivity.putExtra("fileContent", fileContent)
-            intentOpenSectionActivity.putStringArrayListExtra("sectionList", ArrayList(sectionList))
+
+            intentOpenSectionActivity.putExtra(
+                "projectNumber", position
+            )
+            intentOpenSectionActivity.putExtra(
+                "fileName", listOfProjects[position].fileName
+            )
+            intentOpenSectionActivity.putExtra(
+                "fileContent", listOfProjects[position].fileContent
+            )
+
+
             holder.itemView.context.startActivity(intentOpenSectionActivity)
         }
 
-        holder.itemView.textViewProjectNameItemRecycler.setOnClickListener {
-            val intentOpenSectionActivity =
-                Intent(holder.itemView.context, SectionActivity::class.java)
-            intentOpenSectionActivity.putExtra("fileName", fileName)
-            intentOpenSectionActivity.putExtra("uri", uri.toString())
-            intentOpenSectionActivity.putExtra("fileContent", fileContent)
-            intentOpenSectionActivity.putStringArrayListExtra("sectionList", ArrayList(sectionList))
-            holder.itemView.context.startActivity(intentOpenSectionActivity)
+        holder.itemView.imageViewDeleteButton.setOnClickListener {
+            listOfProjects.removeAt(position)
+            notifyDataSetChanged()
         }
     }
 
@@ -51,5 +57,19 @@ class RecyclerAdapterMainActivity(private var listOfProjects: MutableList<Projec
         return listOfProjects.size
     }
 
-    class ProjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ProjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.imageViewDeleteButton.setOnClickListener {
+                deleteListener.deleteItem(adapterPosition)
+            }
+        }
+    }
+
+    interface DeleteInterface {
+        fun deleteItem(position: Int)
+    }
+
+
 }
+
+

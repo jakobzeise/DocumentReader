@@ -11,18 +11,30 @@ class ReadingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reading)
 
-        val fileName = intent.getStringExtra("fileName")
-        var fileContent = intent.getStringExtra("fileContent")
-        val section = intent.getStringExtra("section")?.toInt()
-        val sectionList = intent.getStringArrayListExtra("sectionList")
 
-        val sectionContent = section?.minus(1)?.let { sectionList?.get(it) }
+        val projectNumber = intent.getIntExtra("projectNumber", -1)
+        val sectionNumber = intent.getIntExtra("sectionNumber", -1)
+        val fileName = listOfProjects[projectNumber].fileName
+        val fileContent = listOfProjects[projectNumber].fileContent
+        val readList = intent.getBooleanArrayExtra("readList")
+
+        val sectionContent = fileContent.let {
+            fileReader.getSectionsFromString(it)[sectionNumber]
+        }
         textViewContent.text = sectionContent
         textViewTitle.text = fileName
 
         buttonClose.setOnClickListener {
             val intentGoHome = Intent(it.context, MainActivity::class.java)
             startActivity(intentGoHome)
+        }
+
+        buttonMarkAsRead.setOnClickListener {
+            readList?.set(sectionNumber, true)
+            val intentOpenSectionActivity = Intent(it.context, SectionActivity::class.java)
+            intentOpenSectionActivity.putExtra("projectNumber", projectNumber)
+            intentOpenSectionActivity.putExtra("readList", readList)
+            startActivity(intentOpenSectionActivity)
         }
 
     }
